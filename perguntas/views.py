@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
-from .models import Aluno, AlunoInteresse, AreaInteresse, Enquete, Pergunta, Opcao, Resposta, MultiplaEscolhaResposta
+from .models import Enquete, Pergunta, Opcao, Resposta, MultiplaEscolhaResposta
 from django import forms
 
 class RespostaForm(forms.Form):
@@ -97,30 +97,3 @@ def exibir_resultados(request, enquete_id):
 
     context = {'enquete': enquete, 'resultados': resultados}
     return render(request, 'perguntas/exibir_resultados.html', context)
-
-def listar_alunos(request):
-    alunos = Aluno.objects.all().order_by('nome')
-    return render(request, 'perguntas/listar_alunos.html', {'alunos': alunos})
-
-def detalhar_aluno(request, aluno_id):
-    aluno = get_object_or_404(Aluno, pk=aluno_id)
-    interesses = AlunoInteresse.objects.filter(aluno=aluno).select_related('area_interesse')
-    respostas = Resposta.objects.filter(aluno=aluno).select_related('pergunta__enquete')
-    return render(request, 'perguntas/detalhar_aluno.html', {'aluno': aluno, 'interesses': interesses, 'respostas': respostas})
-
-def listar_areas_interesse(request):
-    areas = AreaInteresse.objects.all().order_by('nome')
-    return render(request, 'perguntas/listar_areas_interesse.html', {'areas': areas})
-
-def detalhar_area_interesse(request, area_id):
-    area = get_object_or_404(AreaInteresse, pk=area_id)
-    alunos_interessados = AlunoInteresse.objects.filter(area_interesse=area).select_related('aluno')
-    return render(request, 'perguntas/detalhar_area_interesse.html', {'area': area, 'alunos_interessados': alunos_interessados})
-
-def listar_interesses_alunos(request):
-    interesses = AlunoInteresse.objects.all().order_by('aluno__nome', 'area_interesse__nome')
-    return render(request, 'perguntas/listar_interesses_alunos.html', {'interesses': interesses})
-
-def detalhar_interesse_aluno(request, interesse_id):
-    interesse = get_object_or_404(AlunoInteresse, pk=interesse_id, select_related=('aluno', 'area_interesse'))
-    return render(request, 'perguntas/detalhar_interesse_aluno.html', {'interesse': interesse})
