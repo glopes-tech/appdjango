@@ -3,6 +3,9 @@ from django.urls import reverse
 from .models import Aluno, AlunoInteresse, AreaInteresse, Enquete, Pergunta, Opcao, Resposta, MultiplaEscolhaResposta
 from django import forms
 
+def index(request):
+    return render(request, 'perguntas/index.html')
+
 class RespostaForm(forms.Form):
     def __init__(self, perguntas, *args, **kwargs):
         super().__init__(*args, **kwargs)
