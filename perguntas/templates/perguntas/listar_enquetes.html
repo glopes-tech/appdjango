@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enquetes para Programadores</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'perguntas/style.css' %}">
+</head>
+<body>
+    <h1>Enquetes Disponíveis</h1>
+    {% if enquetes %}
+        <ul>
+            {% for enquete in enquetes %}
+                <li><a href="{% url 'responder_enquete' enquete.id %}">{{ enquete.titulo }}</a> - {{ enquete.descricao }}
+                    (<a href="{% url 'exibir_resultados' enquete.id %}">Ver Resultados</a>)
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Não há enquetes disponíveis no momento.</p>
+    {% endif %}
+</body>
+</html>

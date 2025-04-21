@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resultados da Enquete: {{ enquete.titulo }}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'perguntas/style.css' %}">
+    <style>
+        .pergunta-container {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .opcao-resultado {
+            margin-bottom: 10px;
+        }
+        .resposta-texto {
+            margin-bottom: 5px;
+            padding: 8px;
+            border: 1px solid #eee;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Resultados da Enquete: {{ enquete.titulo }}</h1>
+    <p>{{ enquete.descricao }}</p>
+
+    {% if resultados %}
+        {% for resultado in resultados %}
+            <div class="pergunta-container">
+                <h3>{{ resultado.pergunta }}</h3>
+                <p>Tipo de Resposta: {{ resultado.tipo }}</p>
+                <p>Total de Respostas para esta pergunta: {{ resultado.total_respostas }}</p>
+
+                {% if resultado.opcoes %}
+                    <ul>
+                        {% for opcao_resultado in resultado.opcoes %}
+                            <li class="opcao-resultado">
+                                {{ opcao_resultado.opcao }}: {{ opcao_resultado.contagem }} votos ({{ opcao_resultado.porcentagem }})
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% elif resultado.respostas_texto %}
+                    <h4>Respostas Livres:</h4>
+                    {% if resultado.respostas_texto %}
+                        <ul>
+                            {% for resposta in resultado.respostas_texto %}
+                                <li class="resposta-texto">{{ resposta }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Nenhuma resposta de texto livre para esta pergunta.</p>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Ainda não há respostas para esta enquete.</p>
+    {% endif %}
+
+    <p><a href="{% url 'listar_enquetes' %}">Voltar para a lista de enquetes</a></p>
+</body>
+</html>
