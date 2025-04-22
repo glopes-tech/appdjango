@@ -38,15 +38,15 @@ def responder_enquete(request, enquete_id):
 
     if request.method == 'POST':
         form = RespostaForm(perguntas, request.POST)
-        if form.is_valid():
-            aluno_nome = "Aluno Teste"  # Em um cenário real, você teria a autenticação de usuários
-            aluno_email = "teste@example.com"
-            aluno, created = aluno.objects.get_or_create(nome=aluno_nome, email=aluno_email)
+        ##if form.is_valid():
+        ##    aluno_nome = "Aluno Teste"  # Em um cenário real, você teria a autenticação de usuários
+        ##    aluno_email = "teste@example.com"
+        ##    aluno, created = aluno.objects.get_or_create(nome=aluno_nome, email=aluno_email)
 
-            for pergunta in perguntas:
+        for pergunta in perguntas:
                 campo = f'pergunta_{pergunta.id}'
                 if campo in form.cleaned_data:
-                    resposta = Resposta.objects.create(aluno=aluno, pergunta=pergunta)
+                    resposta = Resposta.objects.create(pergunta=pergunta)#aluno=aluno, pergunta=pergunta)
                     if pergunta.tipo == 'unica':
                         opcao = form.cleaned_data[campo]
                         resposta.opcao_unica = opcao
@@ -58,7 +58,7 @@ def responder_enquete(request, enquete_id):
                     elif pergunta.tipo == 'texto':
                         resposta.texto_livre = form.cleaned_data[campo]
                         resposta.save()
-            return redirect(reverse('enquete_respondida', args=[enquete_id]))
+        return redirect(reverse('enquete_respondida', args=[enquete_id]))
     else:
         form = RespostaForm(perguntas)
 
