@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
-from .models import Enquete, Pergunta, Opcao, Resposta, MultiplaEscolhaResposta
+from .models import Aluno, Enquete, Pergunta, Opcao, Resposta, MultiplaEscolhaResposta
 from django import forms
 
 class RespostaForm(forms.Form):
@@ -38,15 +38,15 @@ def responder_enquete(request, enquete_id):
 
     if request.method == 'POST':
         form = RespostaForm(perguntas, request.POST)
-        ##if form.is_valid():
-        ##    aluno_nome = "Aluno Teste"  # Em um cenário real, você teria a autenticação de usuários
-        ##    aluno_email = "teste@example.com"
-        ##    aluno, created = aluno.objects.get_or_create(nome=aluno_nome, email=aluno_email)
+        if form.is_valid():  # <-- A validação precisa ocorrer aqui
+            aluno_nome = "Aluno Teste"  # Em um cenário real, você teria a autenticação de usuários
+            aluno_email = "teste@example.com"
+            aluno, created = Aluno.objects.get_or_create(nome=aluno_nome, email=aluno_email)
 
-        for pergunta in perguntas:
+            for pergunta in perguntas:
                 campo = f'pergunta_{pergunta.id}'
                 if campo in form.cleaned_data:
-                    resposta = Resposta.objects.create(pergunta=pergunta)#aluno=aluno, pergunta=pergunta)
+                    resposta = Resposta.objects.create(aluno=aluno, pergunta=pergunta)
                     if pergunta.tipo == 'unica':
                         opcao = form.cleaned_data[campo]
                         resposta.opcao_unica = opcao
@@ -58,7 +58,10 @@ def responder_enquete(request, enquete_id):
                     elif pergunta.tipo == 'texto':
                         resposta.texto_livre = form.cleaned_data[campo]
                         resposta.save()
-        return redirect(reverse('enquete_respondida', args=[enquete_id]))
+            return redirect(reverse('enquete_respondida', args=[enquete_id]))
+        else:
+            # Se o formulário não for válido, você precisa renderizá-lo novamente com os erros
+            return render(request, 'perguntas/responder_enquete.html', {'enquete': enquete, 'form': form})
     else:
         form = RespostaForm(perguntas)
 
