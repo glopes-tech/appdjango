@@ -123,9 +123,9 @@ def detalhar_area_interesse(request, area_id):
     alunos_interessados = AlunoInteresse.objects.filter(area_interesse=area).select_related('aluno')
     return render(request, 'perguntas/detalhar_area_interesse.html', {'area': area, 'alunos_interessados': alunos_interessados})
 
-def listar_interesses_alunos(request):
+def listar_interesse_alunos(request):
     interesses = AlunoInteresse.objects.all().order_by('aluno__nome', 'area_interesse__nome')
-    return render(request, 'perguntas/listar_interesses_alunos.html', {'interesses': interesses})
+    return render(request, 'perguntas/listar_interesse_alunos.html', {'interesses': interesses})
 
 def detalhar_interesse_aluno(request, interesse_id):
     interesse = get_object_or_404(AlunoInteresse, pk=interesse_id, select_related=('aluno', 'area_interesse'))

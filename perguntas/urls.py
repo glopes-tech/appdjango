@@ -11,6 +11,6 @@ urlpatterns = [
     path('alunos/<int:aluno_id>/', views.detalhar_aluno, name='detalhar_aluno'),
     path('areas-interesse/', views.listar_areas_interesse, name='listar_areas_interesse'),
     path('areas-interesse/<int:area_id>/', views.detalhar_area_interesse, name='detalhar_area_interesse'),
-    path('interesses/', views.listar_interesses_alunos, name='listar_interesses_alunos'),
+    path('interesses/', views.listar_interesse_alunos, name='listar_interesse_alunos'),
     path('interesses/<int:interesse_id>/', views.detalhar_interesse_aluno, name='detalhar_interesse_aluno'),
 ]
