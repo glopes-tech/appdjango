@@ -4,7 +4,7 @@ from .models import Aluno, AlunoInteresse, AreaInteresse, Enquete, Pergunta, Opc
 from django import forms
 
 def index(request):
-    return render(request, 'templates/index.html')
+    return render(request, 'index.html')
 
 class RespostaForm(forms.Form):
     def __init__(self, perguntas, *args, **kwargs):
