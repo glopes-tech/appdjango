@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Página Inicial - Enquetes para Programadores{% endblock %}
+{% block content %}
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a href="{% url 'index' %}">Enquetes para Programadores</a>
+        </div>
+        <ul class="navbar-menu">
+            <li class="navbar-item"><a href="{% url 'listar_enquetes' %}">Enquetes</a></li>
+            <li class="navbar-item"><a href="{% url 'listar_alunos' %}">Alunos</a></li>
+            <li class="navbar-item"><a href="{% url 'listar_areas_interesse' %}">Áreas de Interesse</a></li>
+            <li class="navbar-item"><a href="{% url 'listar_interesses_alunos' %}">Interesses</a></li>
+        </ul>
+    </nav>
+
+    <div class="hero">
+        <h1>Bem-vindo ao Sistema de Enquetes para Programadores!</h1>
+        <p>Explore, participe e descubra insights valiosos da comunidade de programação.</p>
+        <a href="{% url 'listar_enquetes' %}" class="button">Ver Enquetes</a>
+    </div>
+
+    <section class="section">
+        <h2>Sobre o Projeto</h2>
+        <p>Este projeto tem como objetivo coletar opiniões e informações de estudantes de programação através de enquetes temáticas. Sua participação é fundamental para entendermos melhor as tendências, desafios e interesses da nossa comunidade.</p>
+    </section>
+{% endblock %}
