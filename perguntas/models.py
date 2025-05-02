@@ -191,9 +191,9 @@ class AreaInteresse(models.Model):
             self.slug = slugify(self.nome)
         super().save(*args, **kwargs)
 
-    @property
-    def total_alunos(self):
-        return self.aluno_set.count()
+    ## @property
+    ## def total_alunos(self):
+    ##    return self.aluno_set.count()
 
     @property
     def enquetes_relacionadas(self):
