@@ -5,16 +5,31 @@ body {
     background-position: center center;
 }
 
+.enquete-list {
+    list-style: none; 
+    padding: 0; 
+}
+
+.enquete-item {
+    background-color: #fff; 
+    border: 1px solid #ddd; 
+    padding: 15px; 
+    margin-bottom: 10px; 
+    border-radius: 5px; 
+    box-shadow: 2px 2px 5px #eee; 
+}
+
 .enquete-item a {
-    text-decoration: none;
-    color: #337ab7;
-    font-weight: bold;
+    text-decoration: none; 
+    color: #337ab7; 
+    font-weight: bold; 
 }
 
 .enquete-item p {
-    color: #666;
-    margin-top: 5px;
+    color: #666; 
+    margin-top: 5px; 
 }
+
 
 /* Estilos para links de voltar */
 .back-link {
