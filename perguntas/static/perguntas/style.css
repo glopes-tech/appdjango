@@ -1,5 +1,5 @@
 body {
-    background-image: url('/static/perguntas/images/background.jpg'); 
+    background-image: url('perguntas/images/background.jpg'); 
     background-repeat: no-repeat; 
     background-size: cover; 
     background-position: center center;
