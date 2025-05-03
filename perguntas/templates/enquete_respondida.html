@@ -1,8 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'style.css' %}
 {% block title %}Enquete Respondida{% endblock %}
 {% block content %}
     <h1>Obrigado por Responder!</h1>
     <p>Suas respostas foram registradas com sucesso.</p>
 
-    <a href="{% url 'listar_enquetes' %}" class="back-link">Voltar para a lista de enquetes</a>
+    <a href="{% url 'index' %}" class="back-link">Voltar para a página inicial</a>
 {% endblock %}

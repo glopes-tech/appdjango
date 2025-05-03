@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'style.css' %}
 {% block title %}Resultados da Enquete: {{ enquete.titulo }}{% endblock %}
 {% block content %}
     <h1>Resultados da Enquete: {{ enquete.titulo }}</h1>
@@ -37,5 +37,5 @@
         <p>Ainda não há respostas para esta enquete.</p>
     {% endif %}
 
-    <a href="{% url 'listar_enquetes' %}" class="back-link">Voltar para a lista de enquetes</a>
+    <a href="{% url 'index' %}" class="back-link">Voltar para a página inicial</a>
 {% endblock %}
