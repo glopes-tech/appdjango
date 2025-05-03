@@ -1,12 +1,12 @@
 body {
-    background-image: url('perguntas/images/background.jpg'); 
+    background-image: url('images/background.png'); 
     background-repeat: no-repeat; 
     background-size: cover; 
     background-position: center center;
 }
 
 .container {
-    background-image: url('background.jpg');
+    background-image: url('images/background.png');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
