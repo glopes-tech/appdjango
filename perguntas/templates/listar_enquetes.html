@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% block title %}Enquetes{% endblock %}
+{% block content %}
     <h1>Enquetes Disponíveis</h1>
     {% if enquetes %}
         <ul>
@@ -13,5 +15,4 @@
         <p>Não há enquetes disponíveis no momento.</p>
     {% endif %}
     <a href="{% url '' %}" class="back-link">Voltar para a página inicial</a>
-</body>
-</html>
+{% endblock %}
