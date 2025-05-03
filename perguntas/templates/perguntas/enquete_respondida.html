@@ -1,13 +1,8 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Obrigado!</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'perguntas/style.css' %}">
-</head>
-<body>
-    <h1>Obrigado por responder!</h1>
-    <p>Suas respostas para a enquete "{{ enquete.titulo }}" foram registradas com sucesso.</p>
-    <p><a href="{% url 'listar_enquetes' %}">Voltar para a lista de enquetes</a></p>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Enquete Respondida{% endblock %}
+{% block content %}
+    <h1>Obrigado por Responder!</h1>
+    <p>Suas respostas foram registradas com sucesso.</p>
+
+    <a href="{% url 'index' %}" class="back-link">Voltar para a página inicial</a>
+{% endblock %}

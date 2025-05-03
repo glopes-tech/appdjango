@@ -1,33 +1,12 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Resultados da Enquete: {{ enquete.titulo }}</title>
-    <style>
-        .pergunta-container {
-            margin-bottom: 20px;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .opcao-resultado {
-            margin-bottom: 10px;
-        }
-        .resposta-texto {
-            margin-bottom: 5px;
-            padding: 8px;
-            border: 1px solid #eee;
-            border-radius: 3px;
-        }
-    </style>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %}Resultados da Enquete: {{ enquete.titulo }}{% endblock %}
+{% block content %}
     <h1>Resultados da Enquete: {{ enquete.titulo }}</h1>
     <p>{{ enquete.descricao }}</p>
 
     {% if resultados %}
         {% for resultado in resultados %}
-            <div class="pergunta-container">
+            <div class="results-container">
                 <h3>{{ resultado.pergunta }}</h3>
                 <p>Tipo de Resposta: {{ resultado.tipo }}</p>
                 <p>Total de Respostas para esta pergunta: {{ resultado.total_respostas }}</p>
@@ -35,7 +14,7 @@
                 {% if resultado.opcoes %}
                     <ul>
                         {% for opcao_resultado in resultado.opcoes %}
-                            <li class="opcao-resultado">
+                            <li class="option-result">
                                 {{ opcao_resultado.opcao }}: {{ opcao_resultado.contagem }} votos ({{ opcao_resultado.porcentagem }})
                             </li>
                         {% endfor %}
@@ -45,7 +24,7 @@
                     {% if resultado.respostas_texto %}
                         <ul>
                             {% for resposta in resultado.respostas_texto %}
-                                <li class="resposta-texto">{{ resposta }}</li>
+                                <li class="free-text-response">{{ resposta }}</li>
                             {% endfor %}
                         </ul>
                     {% else %}
@@ -58,6 +37,5 @@
         <p>Ainda não há respostas para esta enquete.</p>
     {% endif %}
 
-    <p><a href="{% url 'listar_enquetes' %}">Voltar para a lista de enquetes</a></p>
-</body>
-</html>
+    <a href="{% url 'index' %}" class="back-link">Voltar para a página inicial</a>
+{% endblock %}
