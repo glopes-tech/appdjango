@@ -1,9 +1,0 @@
-{% extends 'base.html' %}
-{% block title %}Enquete Respondida{% endblock %}
-{% block content %}
-    <div class="alert alert-success" role="alert">
-        <h4 class="alert-heading">Obrigado por Responder!</h4>
-        <p>Suas respostas foram registradas com sucesso.</p>
-    </div>
-    <a href="{% url 'listar_enquetes' %}" class="btn btn-secondary mt-3">Voltar para a lista de enquetes</a>
-{% endblock %}
