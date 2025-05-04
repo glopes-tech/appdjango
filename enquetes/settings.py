@@ -56,7 +56,8 @@ ROOT_URLCONF = 'enquetes.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['/home/ubuntu/appdjango/templates',
+                 '/home/ubuntu/appdjango/perguntas/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
