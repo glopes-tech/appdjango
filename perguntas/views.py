@@ -4,7 +4,11 @@ from .models import Aluno, AlunoInteresse, AreaInteresse, Enquete, Pergunta, Opc
 from django import forms
 
 def index(request):
+<<<<<<< HEAD
     return render(request, 'index.html')
+=======
+    return render(request, 'perguntas/index.html')
+>>>>>>> parent of da43ff7 (urls2)
 
 class RespostaForm(forms.Form):
     def __init__(self, perguntas, *args, **kwargs):
