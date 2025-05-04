@@ -1,132 +1,92 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from .models import Aluno, AlunoInteresse, AreaInteresse, Enquete, Pergunta, Opcao, Resposta, MultiplaEscolhaResposta
-from django import forms
+from .models import AreaInteresse, Enquete, Pergunta, Resposta, Aluno
+from .forms import RespostaForm, CriarEnqueteForm, RegistrarAlunoForm, FiltrarEnquetesForm
+from django.contrib import messages
+from django.utils import timezone
 
 def index(request):
-    return render(request, 'index.html')
+    now = timezone.now()
+    return render(request, 'perguntas/home.html', {'now': now})
 
-class RespostaForm(forms.Form):
-    def __init__(self, perguntas, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for pergunta in perguntas:
-            if pergunta.tipo == 'unica':
-                self.fields[f'pergunta_{pergunta.id}'] = forms.ModelChoiceField(
-                    queryset=Opcao.objects.filter(pergunta=pergunta),
-                    widget=forms.RadioSelect(),
-                    label=pergunta.texto,
-                    required=pergunta.obrigatoria
-                )
-            elif pergunta.tipo == 'multipla':
-                self.fields[f'pergunta_{pergunta.id}'] = forms.ModelMultipleChoiceField(
-                    queryset=Opcao.objects.filter(pergunta=pergunta),
-                    widget=forms.CheckboxSelectMultiple(),
-                    label=pergunta.texto,
-                    required=pergunta.obrigatoria
-                )
-            elif pergunta.tipo == 'texto':
-                self.fields[f'pergunta_{pergunta.id}'] = forms.CharField(
-                    widget=forms.Textarea,
-                    label=pergunta.texto,
-                    required=pergunta.obrigatoria
-                )
+def gerenciar_enquetes(request):
+    filtro_form = FiltrarEnquetesForm(request.GET)
+    enquetes = Enquete.objects.all().order_by('-data_criacao')
 
-def listar_enquetes(request):
-    enquetes = Enquete.objects.filter(ativa=True)
-    return render(request, 'perguntas/listar_enquetes.html', {'enquetes': enquetes})
+    if filtro_form.is_valid():
+        titulo = filtro_form.cleaned_data.get('titulo')
+        status = filtro_form.cleaned_data.get('status')
 
-def responder_enquete(request, enquete_id):
-    enquete = get_object_or_404(Enquete, pk=enquete_id, ativa=True)
-    perguntas = enquete.pergunta_set.all().order_by('ordem')
+        if titulo:
+            enquetes = enquetes.filter(titulo__icontains=titulo)
+        if status == 'ativa':
+            enquetes = enquetes.filter(ativa=True)
+        elif status == 'encerrada':
+            enquetes = enquetes.filter(ativa=False)
 
+    enquete_id = request.GET.get('enquete_id')
+    responder_form = None
+    enquete_responder = None
+    resultados = None
+    enquete_resultados = None
+
+    if enquete_id:
+        enquete_responder = get_object_or_404(Enquete, pk=enquete_id, ativa=True)
+        perguntas = enquete_responder.pergunta_set.all().order_by('ordem')
+        responder_form = RespostaForm(perguntas)
+
+        if request.method == 'POST':
+            responder_form = RespostaForm(perguntas, request.POST)
+            if responder_form.is_valid():
+                aluno, created = Aluno.objects.get_or_create(nome="Aluno Teste", email="teste@example.com") # Adapte para autenticação real
+                for pergunta in perguntas:
+                    campo = f'pergunta_{pergunta.id}'
+                    if campo in responder_form.cleaned_data:
+                        resposta = Resposta.objects.create(aluno=aluno, pergunta=pergunta)
+                        # ... (lógica para salvar diferentes tipos de respostas)
+                messages.success(request, 'Respostas enviadas com sucesso!')
+                return redirect(reverse('gerenciar_enquetes') + f'?enquete_id={enquete_id}')
+
+        if request.GET.get('resultados') == 'true':
+            enquete_resultados = get_object_or_404(Enquete, pk=enquete_id)
+            # ... (lógica para obter os resultados da enquete)
+
+    return render(request, 'perguntas/enquetes/gerenciar.html', {
+        'enquetes': enquetes,
+        'filtro_form': filtro_form,
+        'responder_form': responder_form,
+        'enquete_responder': enquete_responder,
+        'resultados': resultados,
+        'enquete_resultados': enquete_resultados,
+    })
+
+def registrar_aluno(request):
     if request.method == 'POST':
-        form = RespostaForm(perguntas, request.POST)
-        if form.is_valid():  # <-- A validação precisa ocorrer aqui
-            aluno_nome = "Aluno Teste"  # Em um cenário real, você teria a autenticação de usuários
-            aluno_email = "teste@example.com"
-            aluno, created = Aluno.objects.get_or_create(nome=aluno_nome, email=aluno_email)
-
-            for pergunta in perguntas:
-                campo = f'pergunta_{pergunta.id}'
-                if campo in form.cleaned_data:
-                    resposta = Resposta.objects.create(aluno=aluno, pergunta=pergunta)
-                    if pergunta.tipo == 'unica':
-                        opcao = form.cleaned_data[campo]
-                        resposta.opcao_unica = opcao
-                        resposta.save()
-                    elif pergunta.tipo == 'multipla':
-                        opcoes = form.cleaned_data[campo]
-                        for opcao in opcoes:
-                            MultiplaEscolhaResposta.objects.create(resposta=resposta, opcao=opcao)
-                    elif pergunta.tipo == 'texto':
-                        resposta.texto_livre = form.cleaned_data[campo]
-                        resposta.save()
-            return redirect(reverse('enquete_respondida', args=[enquete_id]))
-        else:
-            # Se o formulário não for válido, você precisa renderizá-lo novamente com os erros
-            return render(request, 'perguntas/responder_enquete.html', {'enquete': enquete, 'form': form})
+        form = RegistrarAlunoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Aluno registrado com sucesso!')
+            return redirect('gerenciar_usuarios')
     else:
-        form = RespostaForm(perguntas)
+        form = RegistrarAlunoForm()
+    return render(request, 'perguntas/usuarios/autenticacao.html', {'registro_form': form})
 
-    return render(request, 'perguntas/responder_enquete.html', {'enquete': enquete, 'form': form})
+def gerenciar_usuarios(request):
+    alunos = Aluno.objects.all()
+    registro_form = RegistrarAlunoForm()
+    return render(request, 'perguntas/usuarios/autenticacao.html', {'alunos': alunos, 'registro_form': registro_form})
 
-def enquete_respondida(request, enquete_id):
-    enquete = get_object_or_404(Enquete, pk=enquete_id, ativa=True)
-    return render(request, 'perguntas/enquete_respondida.html', {'enquete': enquete})
-
-def exibir_resultados(request, enquete_id):
-    enquete = get_object_or_404(Enquete, pk=enquete_id, ativa=True)
-    perguntas = enquete.pergunta_set.all()
-    resultados = []
-
-    for pergunta in perguntas:
-        resultado_pergunta = {'pergunta': pergunta.texto, 'tipo': pergunta.tipo}
-        if pergunta.tipo == 'unica' or pergunta.tipo == 'multipla':
-            opcoes_com_contagem = []
-            total_respostas = pergunta.resposta_set.count()
-            for opcao in pergunta.opcao_set.all():
-                contagem = 0
-                if pergunta.tipo == 'unica':
-                    contagem = Resposta.objects.filter(pergunta=pergunta, opcao_unica=opcao).count()
-                elif pergunta.tipo == 'multipla':
-                    contagem = MultiplaEscolhaResposta.objects.filter(opcao=opcao, resposta__pergunta=pergunta).count()
-
-                porcentagem = (contagem / total_respostas * 100) if total_respostas > 0 else 0
-                opcoes_com_contagem.append({'opcao': opcao.texto, 'contagem': contagem, 'porcentagem': f'{porcentagem:.2f}%'})
-            resultado_pergunta['opcoes'] = opcoes_com_contagem
-            resultado_pergunta['total_respostas'] = total_respostas
-        elif pergunta.tipo == 'texto':
-            respostas_texto = Resposta.objects.filter(pergunta=pergunta).values_list('texto_livre', flat=True).exclude(texto_livre__isnull=True).exclude(texto_livre__exact='')
-            resultado_pergunta['respostas_texto'] = respostas_texto.order_by('-data_resposta')
-            resultado_pergunta['total_respostas'] = respostas_texto.count()
-        resultados.append(resultado_pergunta)
-
-    context = {'enquete': enquete, 'resultados': resultados}
-    return render(request, 'perguntas/exibir_resultados.html', context)
-
-def listar_alunos(request):
-    alunos = Aluno.objects.all().order_by('nome')
-    return render(request, 'perguntas/listar_alunos.html', {'alunos': alunos})
-
-def detalhar_aluno(request, aluno_id):
-    aluno = get_object_or_404(Aluno, pk=aluno_id)
-    interesses = AlunoInteresse.objects.filter(aluno=aluno).select_related('area_interesse')
-    respostas = Resposta.objects.filter(aluno=aluno).select_related('pergunta__enquete')
-    return render(request, 'perguntas/detalhar_aluno.html', {'aluno': aluno, 'interesses': interesses, 'respostas': respostas})
+def criar_enquete(request):
+    if request.method == 'POST':
+        form = CriarEnqueteForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Enquete criada com sucesso!')
+            return redirect('gerenciar_enquetes')
+    else:
+        form = CriarEnqueteForm()
+    return render(request, 'perguntas/admin/criar_enquete.html', {'form': form})
 
 def listar_areas_interesse(request):
     areas = AreaInteresse.objects.all().order_by('nome')
-    return render(request, 'perguntas/listar_areas_interesse.html', {'areas': areas})
-
-def detalhar_area_interesse(request, area_id):
-    area = get_object_or_404(AreaInteresse, pk=area_id)
-    alunos_interessados = AlunoInteresse.objects.filter(area_interesse=area).select_related('aluno')
-    return render(request, 'perguntas/detalhar_area_interesse.html', {'area': area, 'alunos_interessados': alunos_interessados})
-
-def listar_interesse_alunos(request):
-    interesses = AlunoInteresse.objects.all().order_by('aluno__nome', 'area_interesse__nome')
-    return render(request, 'perguntas/listar_interesse_alunos.html', {'interesses': interesses})
-
-def detalhar_interesse_aluno(request, interesse_id):
-    interesse = get_object_or_404(AlunoInteresse, pk=interesse_id, select_related=('aluno', 'area_interesse'))
-    return render(request, 'perguntas/detalhar_interesse_aluno.html', {'interesse': interesse})
+    return render(request, 'perguntas/areas/listar.html', {'areas': areas})

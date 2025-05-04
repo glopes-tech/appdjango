@@ -1,124 +1,24 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Enquetes para Programadores{% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'perguntas/style.css' %}">
-    <style>
-        body {
-            font-family: sans-serif;
-            margin: 0;
-            background-image: url('image/background.png');
-            background-size: cover;
-            background-color: #f4f4f4;
-            color: #333;
-        }
+{% extends 'base.html' %}
+{% block title %}Página Inicial{% endblock %}
+{% block content %}
+    <h1>Bem-vindo!</h1>
+    <p>Explore as enquetes e participe da nossa comunidade.</p>
 
-        .container {
-            max-width: 960px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+    <form class="form-inline mt-4">
+        <div class="form-group mr-2">
+            <label for="search" class="mr-2">Pesquisar:</label>
+            <input type="text" class="form-control" id="search" placeholder="Digite sua busca">
+        </div>
+        <button type="submit" class="btn btn-outline-success">Buscar</button>
+    </form>
 
-        .navbar {
-            background-color: #333;
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 5px 5px 0 0;
-        }
-
-        .navbar-brand a {
-            color: white;
-            text-decoration: none;
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-
-        .navbar-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-        }
-
-        .navbar-item {
-            margin-left: 20px;
-        }
-
-        .navbar-item a {
-            color: white;
-            text-decoration: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-        }
-
-        .navbar-item a:hover {
-            background-color: #555;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 40px 20px;
-            background-color: #e9ecef;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .hero h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            color: #337ab7;
-        }
-
-        .hero p {
-            font-size: 1.1em;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .button {
-            display: inline-block;
-            background-color: #5cb85c;
-            color: white;
-            padding: 12px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-
-        .button:hover {
-            background-color: #4cae4c;
-        }
-
-        .section {
-            padding: 20px 0;
-            border-top: 1px solid #eee;
-        }
-
-        .section h2 {
-            color: #337ab7;
-            margin-bottom: 15px;
-        }
-
-        .section p {
-            color: #666;
-            line-height: 1.6;
-        }
-        
-    </style>
-</head>
-<body>
-    <div class="container">
-        {% block content %}
-        {% endblock %}
-    </div>
-</body>
-</html>
+    <hr class="my-4">
+    <p>Links para as funcionalidades:</p>
+    <ul class="list-unstyled">
+        <li><a href="{% url 'gerenciar_enquetes' %}" class="btn btn-link">Ver Enquetes</a></li>
+        <li><a href="{% url 'registrar_aluno' %}" class="btn btn-link">Registrar Aluno</a></li>
+        <li><a href="{% url 'listar_areas_interesse' %}" class="btn btn-link">Áreas de Interesse</a></li>
+        <li><a href="{% url 'admin_criar_enquete' %}" class="btn btn-link">Criar Enquete (Admin)</a></li>
+        <li><a href="{% url 'exemplo_while' %}" class="btn btn-link">Exemplo While</a></li>
+    </ul>
+{% endblock %}
