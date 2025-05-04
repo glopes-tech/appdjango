@@ -57,7 +57,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': ['/home/ubuntu/appdjango/templates',
-                 '/home/ubuntu/appdjango/perguntas/templates'],
+                 '/home/ubuntu/appdjango/perguntas/templates/perguntas'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
