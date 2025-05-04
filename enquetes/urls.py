@@ -1,8 +1,10 @@
+from django.contrib import admin
 from django.urls import path
 from perguntas import views
 
 urlpatterns = [
-    path('', views.index, name='index'),  # Página inicial
+    path('admin/', admin.site.urls),
+    path('', views.index, name='index'),
     path('enquetes/', views.listar_enquetes, name='listar_enquetes'),
     path('enquete/<int:enquete_id>/', views.responder_enquete, name='responder_enquete'),
     path('enquete/<int:enquete_id>/respondida/', views.enquete_respondida, name='enquete_respondida'),
