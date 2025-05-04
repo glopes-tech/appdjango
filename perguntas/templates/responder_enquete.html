@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Responder Enquete: {{ enquete.titulo }}{% endblock %}
+{% block content %}
+    <h1>{{ enquete.titulo }}</h1>
+    <p>{{ enquete.descricao }}</p>
+
+    <form method="post" class="form-container">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                    <div style="color: red;">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit">Enviar Respostas</button>
+    </form>
+    <a href="{% url 'index' %}" class="back-link">Voltar para a página inicial</a>
+{% endblock %}
