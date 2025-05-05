@@ -51,7 +51,7 @@ def gerenciar_enquetes(request):
             enquete_resultados = get_object_or_404(Enquete, pk=enquete_id)
             # ... (lógica para obter os resultados da enquete)
 
-    return render(request, 'perguntas/enquetes/gerenciar.html', {
+    return render(request, 'perguntas/enquetes/gerenciar_enquetes.html', {
         'enquetes': enquetes,
         'filtro_form': filtro_form,
         'responder_form': responder_form,
@@ -66,15 +66,15 @@ def registrar_aluno(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Aluno registrado com sucesso!')
-            return redirect('gerenciar_usuarios')
+            return redirect('perguntas/usuarios/gerenciar')
     else:
         form = RegistrarAlunoForm()
-    return render(request, 'perguntas/usuarios/autenticacao.html', {'registro_form': form})
+    return render(request, 'perguntas/usuarios/gerenciar.html', {'registro_form': form})
 
 def gerenciar_usuarios(request):
     alunos = Aluno.objects.all()
     registro_form = RegistrarAlunoForm()
-    return render(request, 'perguntas/usuarios/autenticacao.html', {'alunos': alunos, 'registro_form': registro_form})
+    return render(request, 'perguntas/usuarios/gerenciar.html', {'alunos': alunos, 'registro_form': registro_form})
 
 def criar_enquete(request):
     if request.method == 'POST':
@@ -82,11 +82,11 @@ def criar_enquete(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Enquete criada com sucesso!')
-            return redirect('gerenciar_enquetes')
+            return redirect('perguntas/admin/criar_enquetes')
     else:
         form = CriarEnqueteForm()
     return render(request, 'perguntas/admin/criar_enquete.html', {'form': form})
 
 def listar_areas_interesse(request):
     areas = AreaInteresse.objects.all().order_by('nome')
-    return render(request, 'perguntas/areas/listar.html', {'areas': areas})
+    return render(request, 'perguntas/areas/listar_areas_interesse.html', {'areas': areas})
