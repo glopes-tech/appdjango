@@ -7,7 +7,7 @@ from django.utils import timezone
 
 def index(request):
     now = timezone.now()
-    return render(request, 'perguntas/home.html', {'now': now})
+    return render(request, 'home.html', {'now': now})
 
 def gerenciar_enquetes(request):
     filtro_form = FiltrarEnquetesForm(request.GET)
