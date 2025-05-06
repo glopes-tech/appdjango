@@ -60,6 +60,35 @@ def gerenciar_enquetes(request):
         'enquete_resultados': enquete_resultados,
     })
 
+def responder_enquete(request, enquete_id):
+    enquete = get_object_or_404(Enquete, pk=enquete_id)
+    perguntas = Pergunta.objects.filter(enquete=enquete)
+    if request.method == 'POST':
+        form = RespostaForm(perguntas, request.POST)
+        if form.is_valid():
+            # Process the form data and save the responses
+            for pergunta in perguntas:
+                if pergunta.tipo == 'texto':
+                    resposta_texto = form.cleaned_data[f'pergunta_{pergunta.id}']
+                    Resposta.objects.create(
+                        pergunta=pergunta,
+                        resposta_texto=resposta_texto,
+                    )
+                elif pergunta.tipo in ['unica', 'multipla']:
+                    opcoes_selecionadas = form.cleaned_data[f'pergunta_{pergunta.id}']
+                    for opcao in opcoes_selecionadas:
+                        Resposta.objects.create(
+                            pergunta=pergunta,
+                            opcao_selecionada=opcao,
+                        )
+            return redirect('enquete_respondida')  # Redirect to a success page
+    else:
+        form = RespostaForm(perguntas)
+    return render(request, 'perguntas/responder_enquete.html', {'enquete': enquete, 'form': form})
+
+def enquete_respondida(request):
+    return render(request, 'perguntas/enquete_respondida.html')
+    
 def registrar_aluno(request):
     if request.method == 'POST':
         form = RegistrarAlunoForm(request.POST)
