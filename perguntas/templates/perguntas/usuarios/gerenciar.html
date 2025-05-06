@@ -8,14 +8,13 @@
         {% csrf_token %}
         {% include 'perguntas/snippets/form_errors.html' with form=registro_form %}
         {% for field in registro_form %}
-        <div class="form-group">
-            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-            {{ field(class="form-control") }}
-            {% if field.errors %}
-                <div class="alert alert-danger mt-1">{{ field.errors }}</div>
-            {% endif %}
-        </d
-        
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field(class="form-control") }}
+                {% if field.errors %}
+                    <div class="alert alert-danger mt-1">{{ field.errors }}</div>
+                {% endif %}
+            </div>
         {% endfor %}
         <button type="submit" class="btn btn-primary">Registrar</button>
     </form>
@@ -26,9 +25,9 @@
     {% if alunos %}
         <ul class="list-group">
             {% for aluno in alunos %}
-                <li class="list-group-item">{{ aluno.nome }} ({{ aluno.email|lower|default:"Sem e-mail" }})</li>
+                <li class="list-group-item\">{{ aluno.nome }} ({{ aluno.email|lower|default:"Sem e-mail" }})</li>
             {% empty %}
-                <li class="list-group-item">Nenhum aluno registrado ainda.</li>
+                <li class="list-group-item\">Nenhum aluno registrado ainda.</li>
             {% endfor %}
         </ul>
     {% endif %}
