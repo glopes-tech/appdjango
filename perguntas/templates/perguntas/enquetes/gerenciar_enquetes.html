@@ -25,7 +25,7 @@
         <ul class="list-group">
             {% for enquete in enquetes %}
                 <li class="list-group-item">
-                    <a href="{% url 'enquetes/responder_enquete' enquete.id %}">{{ enquete.titulo }}</a>
+                    <a href="{% url 'responder_enquete' enquete.id %}">{{ enquete.titulo }}</a>
                     {% if enquete.encerrada %}
                         <span class="badge badge-danger badge-pill">Encerrada</span>
                     {% endif %}
