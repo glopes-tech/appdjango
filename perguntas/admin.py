@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Enquete, Pergunta, Opcao, Aluno, Resposta, MultiplaEscolhaResposta, AreaInteresse, AlunoInteresse
+from .models import Enquete, Opcao, Pergunta, Aluno, AreaInteresse, Resposta, MultiplaEscolhaResposta, AreaInteresse, AlunoInteresse
 
 admin.site.register(Enquete)
 admin.site.register(Pergunta)
