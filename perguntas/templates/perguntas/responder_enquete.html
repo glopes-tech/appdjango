@@ -8,8 +8,8 @@
         {% csrf_token %}
         {% for field in form %}
             <div class="form-group">
-                {{ field.label_tag(class="form-label") }}
-                {{ field(class="form-control") }}
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field }}
                 {% if field.errors %}
                     <div class="alert alert-danger mt-1">{{ field.errors }}</div>
                 {% endif %}
