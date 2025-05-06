@@ -82,7 +82,7 @@ def criar_enquete(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Enquete criada com sucesso!')
-            return redirect('perguntas/admin/criar_enquetes')
+            return redirect('perguntas/admin/criar_enquete')
     else:
         form = CriarEnqueteForm()
     return render(request, 'perguntas/admin/criar_enquete.html', {'form': form})
