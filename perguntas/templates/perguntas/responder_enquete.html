@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'perguntas/base.html' %}
 {% block title %}Responder Enquete: {{ enquete.titulo }}{% endblock %}
 {% block content %}
     <h1>{{ enquete.titulo }}</h1>
@@ -17,5 +17,5 @@
         {% endfor %}
         <button type="submit" class="btn btn-primary">Enviar Respostas</button>
     </form>
-    <a href="{% url 'listar_enquetes' %}" class="btn btn-secondary mt-3">Voltar para a lista de enquetes</a>
+    {# <a href="{% url 'listar_enquetes' %}" class="btn btn-secondary mt-3">Voltar para a lista de enquetes</a> #}
 {% endblock %}

@@ -7,7 +7,7 @@ from django.utils import timezone
 
 def index(request):
     now = timezone.now()
-    return render(request, 'home.html', {'now': now})
+    return render(request, 'perguntas/home.html', {'now': now})
 
 def gerenciar_enquetes(request):
     filtro_form = FiltrarEnquetesForm(request.GET)
@@ -66,7 +66,6 @@ def responder_enquete(request, enquete_id):
     if request.method == 'POST':
         form = RespostaForm(perguntas, request.POST)
         if form.is_valid():
-            # Process the form data and save the responses
             for pergunta in perguntas:
                 if pergunta.tipo == 'texto':
                     resposta_texto = form.cleaned_data[f'pergunta_{pergunta.id}']
@@ -81,7 +80,7 @@ def responder_enquete(request, enquete_id):
                             pergunta=pergunta,
                             opcao_selecionada=opcao,
                         )
-            return redirect('enquete_respondida')  # Redirect to a success page
+            return redirect('enquete_respondida')
     else:
         form = RespostaForm(perguntas)
     return render(request, 'perguntas/responder_enquete.html', {'enquete': enquete, 'form': form})
