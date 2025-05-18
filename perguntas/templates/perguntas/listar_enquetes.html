@@ -1,23 +1,10 @@
 {% extends 'base.html' %}
-{% block title %}Enquetes Disponíveis{% endblock %}
 {% block content %}
-    <h1>Enquetes Disponíveis</h1>
-    {% if enquetes %}
-        <ul class="list-group">
-            {% for enquete in enquetes %}
-                <li class="list-group-item">
-                    <a href="{% url 'responder_enquete' enquete.id %}">{{ enquete.titulo }}</a> - {{ enquete.descricao }}
-                    {% if enquete.encerrada %}
-                        <span class="badge badge-danger">Encerrada</span>
-                    {% endif %}
-                    (<a href="{% url 'exibir_resultados' enquete.id %}" class="btn btn-sm btn-info ml-2">Ver Resultados</a>)
-                </li>
-            {% empty %}
-                <li class="list-group-item">Não há enquetes disponíveis no momento.</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p class="alert alert-info">Não há enquetes disponíveis no momento.</p>
-    {% endif %}
-    <a href="{% url 'index' %}" class="btn btn-secondary mt-3">Voltar para a página inicial</a>
+    <h1>Lista de Enquetes</h1>
+    <ul>
+        {% for enquete in enquetes %}
+            <li><a href="{% url 'detalhar_enquete' enquete.pk %}">{{ enquete.titulo }}</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'criar_enquete' %}">Criar Nova Enquete</a>
 {% endblock %}
